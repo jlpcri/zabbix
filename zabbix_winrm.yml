@@ -1,0 +1,16 @@
+- hosts: windows
+
+  tasks:
+  - win_ping:
+
+  - name: Stop Zabbix Agent
+    win_service: 
+      name: "Zabbix Agent"
+      state: stopped
+
+  - name: Uninstall Zabbix Agent Service
+    win_command: C:\zabbix\bin\win64\zabbix_agentd.exe --config C:\zabbix\conf\zabbix_agentd.win.conf --uninstall
+    register: uninstall_result
+
+  - debug: var=uninstall_result.stdout
+
