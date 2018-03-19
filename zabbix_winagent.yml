@@ -1,0 +1,41 @@
+- hosts: windows
+ 
+  tasks:
+  - win_ping:
+
+  - name: Download Zabbix Agent Package for Windows
+    win_get_url:
+      url: https://www.zabbix.com/downloads/3.4.6/zabbix_agents_3.4.6.win.zip
+      dest: C:\temp\zabbix_agents_3.4.6.win.zip
+
+  - name: Uncompress Zabbix Zip in C Partition
+    win_unzip:
+      src: C:\temp\zabbix_agents_3.4.6.win.zip
+      dest: C:\zabbix
+ 
+  - name: Copy Over Zabbix Config
+    win_copy:
+      src: zabbix_agentd.win.conf
+      dest: C:\zabbix\conf\
+ 
+  - name: Create log Dirctory
+    win_file:
+      path: C:\zabbix\log
+      state: directory
+ 
+  - name: Remove Zabbix Zip Package
+    win_file:
+      path: C:\temp\zabbix_agents_3.4.6.win.zip
+      state: absent
+ 
+  - name: Install Zabbix Agent
+    win_command: C:\zabbix\bin\win64\zabbix_agentd.exe --config C:\zabbix\conf\zabbix_agentd.win.conf --install
+    register: install_result
+ 
+  - name: Restart Zabbix Agent
+    win_service:
+      name: "Zabbix Agent"
+      start_mode: auto
+      state: restarted
+ 
+  - debug: var=install_result.stdout

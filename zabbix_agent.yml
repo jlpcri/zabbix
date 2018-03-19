@@ -24,8 +24,12 @@
     yum: name=zabbix-agent state=latest
 
   - name: Copy Zabbix Configs
-    copy: src=zabbix_agentd.conf dest=/etc/zabbix/zabbix_agentd.conf
-    copy: src=zabbix-agent dest=/etc/logrotate.d/zabbix-agent
+    copy: 
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+    with_items:
+      - { src: 'zabbix_agentd.conf', dest: '/etc/zabbix/zabbix_agentd.conf' }
+      - { src: 'zabbix-agent', dest: '/etc/logrotate.d/zabbix-agent' }
 
   - name: Set Permissions for Service Account
     file: path={{ item }} owner=eitzbxcp group=eitzbxcp state=directory recurse=yes mode=0755
