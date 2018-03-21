@@ -44,6 +44,20 @@
       - /var/run/zabbix
       - /var/log/zabbix
 
+  - name: Open Local firewalld Ports RHEL 7
+    firewalld:
+      port: "{{ item }}"
+      permanent: true
+      zone: public
+      state: enabled
+    with_items:
+      - 10050/tcp
+    notify:
+      - Reload Firewalld
+    when:
+      - ansible_distribution == "RedHat"
+      - ansible_distribution_major_version == "7"
+
   - service:
       name: zabbix-agent
       enabled: yes
