@@ -63,13 +63,8 @@
       enabled: yes
       state: restarted
 
-  - name: Check for an Active Agent and Server Port Connections
+  - name: Check zabbix-agent Port is Open
     wait_for:
-      host: "{{ item.ip }}"
-      port: "{{ item.port }}"
-      state: drained
-      timeout: 120
-    with_items:
-      - { ip: '{{ ansible_default_ipv4.address }}', port: '10050' }
-      - { ip: '0.0.0.0', port: '10051' }
-
+      port: 10050
+      connect_timeout: 5
+      timeout: 5
