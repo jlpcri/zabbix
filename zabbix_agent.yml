@@ -1,10 +1,14 @@
+---
 - hosts: linux
   become: yes
 
   tasks:
+  - name: Set zabbix-server According to Environment
+    include: set_server.yml
+
   - name: Check if zabbix-server Port is Open
     wait_for:
-      host: "zabbix-server"
+      host: "{{ zabbix_server }}"
       port: 10051
       connect_timeout: 5
       timeout: 5
@@ -31,11 +35,14 @@
     yum: name=zabbix-agent state=latest
 
   - name: Copy Zabbix Configs
-    copy: 
+    template: 
       src: "{{ item.src }}"
       dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0644
     with_items:
-      - { src: 'zabbix_agentd.conf', dest: '/etc/zabbix/zabbix_agentd.conf' }
+      - { src: 'zabbix_agentd.conf.j2', dest: '/etc/zabbix/zabbix_agentd.conf' }
       - { src: 'zabbix-agent', dest: '/etc/logrotate.d/zabbix-agent' }
 
   - name: Set Permissions for Service Account
@@ -68,3 +75,4 @@
       port: 10050
       connect_timeout: 5
       timeout: 5
+...

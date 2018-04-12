@@ -1,0 +1,10 @@
+---
+# current list of zabbix servers, going with newer terminology of:
+# dev -> test -> stage for zabbix servers.
+# vault proxy servers to be added as needed, defaults to stage
+zabbix_stage: zabbix-server.west.com
+zabbix_test: lsl30409.sysdev.west.com
+zabbix_dev: lsl30374.sysdev.west.com
+zabbix_vault: pending
+zabbix_server: "{{ zabbix_stage }}"
+...
