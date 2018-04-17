@@ -4,7 +4,7 @@
 
   tasks:
   - name: Set zabbix-server According to Environment
-    include: set_server.yml
+    include: set_properties.yml
 
   - name: Check if zabbix-server Port is Open
     wait_for:
@@ -43,10 +43,10 @@
       mode: 0644
     with_items:
       - { src: 'zabbix_agentd.conf.j2', dest: '/etc/zabbix/zabbix_agentd.conf' }
-      - { src: 'zabbix-agent', dest: '/etc/logrotate.d/zabbix-agent' }
+      - { src: 'zabbix-agent.j2', dest: '/etc/logrotate.d/zabbix-agent' }
 
   - name: Set Permissions for Service Account
-    file: path={{ item }} owner=eitzbxcp group=eitzbxcp state=directory recurse=yes mode=0755
+    file: path={{ item }} owner={{ zabbix_user }} group={{ zabbix_user }} state=directory mode=0755 recurse=yes
     with_items:
       - /var/run/zabbix
       - /var/log/zabbix
