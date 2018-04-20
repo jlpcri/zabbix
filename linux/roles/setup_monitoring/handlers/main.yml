@@ -5,4 +5,5 @@
     service:
       name: firewalld
       state: restarted
+
 ...
