@@ -7,6 +7,11 @@
 
   pre_tasks:
 
+  - name: Set Zabbix Default Values
+    include_vars:
+      file: defaults.yml
+      name: west
+
   - name: Set Zabbix Property Variables
     include: set_properties.yml
 

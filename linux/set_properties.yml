@@ -6,11 +6,6 @@
     include_vars:
       file: properties.yml
 
-  - name: Set Zabbix Default Values
-    include_vars:
-      file: defaults.yml
-      name: west
-
   - name: Check if DEV Subnet
     set_fact: 
       west: "{{ west|combine({'zabbix': {'server': '{{ zabbix_dev }}', 'owner': '{{ zabbix_default }}', 'group': '{{ zabbix_default }}'}}) }}" 
