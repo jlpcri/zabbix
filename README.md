@@ -14,9 +14,14 @@ Confluence link for more information on the playbook.
 
 [Agent Install Linux](https://wiki.west.com/display/IPEA/Agent+Install+Linux "Linux Agent Confluence")
 
-This playbook is built using the same format at the setup_monitoring role from the ETS-prep playbook, without all the other roles.
+Sample usage for kicking off the ansible agent playbook: 
 
-Instead of using the default variable, subnet and datacenter variable files in the ETS-prep playbook it uses: 
+`$ ansible-playbook -K zabbix_agent.yml -i staging.yml --limit=linux5838`
+
+### More Information on the Playbook Setup
+
+This playbook is built using the same format at the setup_monitoring role from the ETS-prep playbook, without all the other roles and variable files. Instead variable files in the ETS-prep playbook it uses: 
+
 - defaults.yml, to set the default Zabbix server and user
 - properties.yml, has all environments Zabbix servers and users
 - set_properties.yml, is called to set the correct Zabbix server and user by subnet
@@ -28,7 +33,7 @@ To install using only the default Zabbix server you have set in defaults.yml com
     include: set_properties.yml
 ```
 
-The staging.yml file is an example inventory. Update with your own servers or create your own with the following groups to not have to edit the playbook.
+The staging.yml file is an example inventory. Update with your own servers or create your own with the following group to not have to edit the playbook.
 
 ```
 ---
@@ -44,15 +49,12 @@ The templated files for /etc/zabbix/zabbix_agentd.conf and /etc/logrotate.d/zabb
 The zabbix_agent.yml file is the start script, to see all the tasks being performed in the install look at:
 - roles/setup_monitoring/tasks/main.yml
 
-Sample usage for kicking off the ansible agent playbook: 
-
-`$ ansible-playbook -K zabbix_agent.yml -i staging.yml --limit=linux5838`
-
 Windows Playbook
 ---------------------
 Confluence links for more information on the playbooks.
 
 [Agent Install Windows](https://wiki.west.com/display/IPEA/Agent+Install+Windows "Windows Agent Install Confluence")
+
 [Agent Uninstall Windows](https://wiki.west.com/display/IPEA/Agent+Uninstall+Windows "Windows Agent Removal Confluence")
 
 Sample usage for the windows agent installer playbook.
