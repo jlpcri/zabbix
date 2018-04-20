@@ -1,0 +1,8 @@
+---
+# in ETS-prep playbook this is handled by roles/setup_iptables/handlers/
+# adding here so that is defined
+  - name: Reload Firewalld
+    service:
+      name: firewalld
+      state: restarted
+...

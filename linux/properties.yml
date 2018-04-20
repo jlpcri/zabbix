@@ -2,7 +2,6 @@
 # set zabbix user to the eod standard or the default user
 zabbix_eod: eitzbxcp
 zabbix_default: zabbix
-zabbix_user: "{{ zabbix_eod }}"
 
 # current list of zabbix servers, going with newer terminology of:
 # dev -> test -> stage -> prod for zabbix servers.
@@ -12,5 +11,5 @@ zabbix_stage: zabbix-server.west.com
 zabbix_test: lsl30409.sysdev.west.com
 zabbix_dev: lsl30374.sysdev.west.com
 zabbix_vault: pending
-zabbix_server: "{{ zabbix_prod }}"
+
 ...

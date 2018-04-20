@@ -5,5 +5,5 @@
 	delaycompress
 	missingok
 	notifempty
-	create 0664 {{ zabbix_user }} {{ zabbix_user }}
+	create 0664 {{ west.zabbix.owner }} {{ west.zabbix.group }}
 }

@@ -1,0 +1,16 @@
+---
+- hosts: linux
+  become: yes
+
+  # simplified playbook of ETS-prep only sets the variables needed for zabbix
+  # then runs the zabbix portion of the playbook
+
+  pre_tasks:
+
+  - name: Set Zabbix Property Variables
+    include: set_properties.yml
+
+  roles: 
+    - { role: setup_monitoring, tags: [setup_monitoring] }
+
+...

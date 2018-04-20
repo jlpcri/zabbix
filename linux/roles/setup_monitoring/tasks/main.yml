@@ -1,38 +1,48 @@
 ---
-- hosts: linux
-  become: yes
-
-  tasks:
-  - name: Set zabbix-server According to Environment
-    include: set_properties.yml
-
   - name: Check if zabbix-server Port is Open
     wait_for:
-      host: "{{ zabbix_server }}"
+      host: "{{ west.zabbix.server }}"
       port: 10051
       connect_timeout: 5
       timeout: 5
 
   - name: Install Zabbix RPM Repo RHEL 5
-    yum: name=https://repo.zabbix.com/zabbix/3.4/rhel/5/x86_64/zabbix-release-3.4-1.noarch.rpm
+    retries: 3
+    delay: 5
+    yum:
+      name: https://repo.zabbix.com/zabbix/3.4/rhel/5/x86_64/zabbix-release-3.4-1.noarch.rpm
+      validate_certs: false
     when: 
       - ansible_distribution == "RedHat"
       - ansible_distribution_major_version == "5"
 
   - name: Install Zabbix RPM Repo RHEL 6
-    yum: name=https://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-release-3.4-1.el6.noarch.rpm
+    retries: 3
+    delay: 5
+    yum:
+      name: https://repo.zabbix.com/zabbix/3.4/rhel/6/x86_64/zabbix-release-3.4-1.el6.noarch.rpm
+      validate_certs: false
     when: 
       - ansible_distribution == "RedHat"
       - ansible_distribution_major_version == "6"
 
   - name: Install Zabbix RPM Repo RHEL 7
-    yum: name=https://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm
+    retries: 3
+    delay: 5
+    yum:
+      name: https://repo.zabbix.com/zabbix/3.4/rhel/7/x86_64/zabbix-release-3.4-2.el7.noarch.rpm
+      validate_certs: false
     when:
       - ansible_distribution == "RedHat"
       - ansible_distribution_major_version == "7"
 
   - name: Install zabbix-agent
-    yum: name=zabbix-agent state=latest
+    retries: 3
+    delay: 5
+    yum:
+      name: zabbix-agent
+      state: latest
+      validate_certs: false
 
   - name: Copy Zabbix Configs
     template: 
@@ -42,30 +52,38 @@
       group: root
       mode: 0644
     with_items:
-      - { src: 'zabbix_agentd.conf.j2', dest: '/etc/zabbix/zabbix_agentd.conf' }
-      - { src: 'zabbix-agent.j2', dest: '/etc/logrotate.d/zabbix-agent' }
+      - { src: 'etc/zabbix/zabbix_agentd.conf.j2', dest: '/etc/zabbix/zabbix_agentd.conf' }
+      - { src: 'etc/logrotate.d/zabbix-agent.j2', dest: '/etc/logrotate.d/zabbix-agent' }
 
   - name: Set Permissions for Service Account
-    file: path={{ item }} owner={{ zabbix_user }} group={{ zabbix_user }} state=directory mode=0755 recurse=yes
+    file: 
+      path: "{{ item }}"
+      owner: "{{ west.zabbix.owner }}"
+      group: "{{ west.zabbix.group }}"
+      state: directory 
+      mode: 0755 
+      recurse: yes
     with_items:
       - /var/run/zabbix
       - /var/log/zabbix
 
-  - name: Open Local firewalld Ports RHEL 7
+  - name: Open Local Firewall Port for Saved and Running Config
     firewalld:
-      port: "{{ item }}"
-      permanent: true
+      port: "{{ item.port }}"
+      permanent: "{{ item.perm }}"
       zone: public
       state: enabled
     with_items:
-      - 10050/tcp
+      - { port: '10050/tcp', perm: 'true' }
+      - { port: '10050/tcp', perm: 'false' }
     notify:
       - Reload Firewalld
     when:
       - ansible_distribution == "RedHat"
       - ansible_distribution_major_version == "7"
 
-  - service:
+  - name: Enable and start the Zabbix agent
+    service:
       name: zabbix-agent
       enabled: yes
       state: restarted
@@ -75,4 +93,5 @@
       port: 10050
       connect_timeout: 5
       timeout: 5
+
 ...

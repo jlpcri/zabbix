@@ -1,10 +1,4 @@
 ---
-beats:
-  hosts:
-    linux2363:
-    linux5838:
-    10.6.20.120:
-
 linux:
   hosts:
     linux5838:
@@ -98,14 +92,4 @@ linux:
     led00233:
     lsl30410.sysdev.west.com:
 
-aix: 
-  hosts: 
-    ibm776:
-    ibm782:
-    ibm783:
-    ibm784:
-
-windows:
-  hosts:
-    wcw32348.corp.westworlds.com:
-
+...

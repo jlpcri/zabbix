@@ -2,27 +2,33 @@
 # zabbix_server.yml contains the servers for each defined zabbix zone
 # check subnets and masks if needs to be other than prod zabbix-server
 
-  - name: Include zabbix_properties.yml for Server FQDNs
+  - name: Include Properties File for Server FQDNs and User Info
     include_vars:
-      file: zabbix_properties.yml
+      file: properties.yml
+
+  - name: Set Zabbix Default Values
+    include_vars:
+      file: defaults.yml
+      name: west
 
   - name: Check if DEV Subnet
     set_fact: 
-      zabbix_server: "{{ zabbix_dev }}"
-      zabbix_user: "{{ zabbix_default }}"
+      west: "{{ west|combine({'zabbix': {'server': '{{ zabbix_dev }}', 'owner': '{{ zabbix_default }}', 'group': '{{ zabbix_default }}'}}) }}" 
     when: 
       ( ansible_default_ipv4.network == "10.27.164.0" and ansible_default_ipv4.netmask == "255.255.252.0" ) or
       ( ansible_default_ipv4.network == "10.27.224.0" and ansible_default_ipv4.netmask == "255.255.254.0" )
 
   - name: Check if Test Subnet
-    set_fact: 
-      zabbix_server: "{{ zabbix_test }}"
+    set_fact:
+      west: "{{ west|combine({'zabbix': {'server': '{{ zabbix_test }}'}}) }}" 
     when: 
       ( ansible_default_ipv4.network == "10.18.132.0" and ansible_default_ipv4.netmask == "255.255.255.0" ) or
       ( ansible_default_ipv4.network == "10.18.138.0" and ansible_default_ipv4.netmask == "255.255.255.0" ) or
+      ( ansible_default_ipv4.network == "10.18.153.0" and ansible_default_ipv4.netmask == "255.255.255.0" ) or
       ( ansible_default_ipv4.network == "10.27.228.0" and ansible_default_ipv4.netmask == "255.255.254.0" )
 
-  - name: Display Settings for zabbix_server and zabbix_user
+  - name: Settings for Zabbix Server and User
     debug:
-      msg: "zabbix_server: {{ zabbix_server }}, zabbix_user: {{ zabbix_user }}"
+      msg: "west {{ west }}"
+
 ...
