@@ -1,6 +1,5 @@
 ---
-# For the Zabbix monitoring, the default is to use
-# the production server and over-ride per subnet:
+# default is to use the prod server and user then over-ride when needed
 zabbix:
   server: "{{ zabbix_prod }}"
   owner: "{{ zabbix_eod }}"

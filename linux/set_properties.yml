@@ -1,10 +1,6 @@
 ---
-# zabbix_server.yml contains the servers for each defined zabbix zone
+# properties.yml contains the servers for each defined zabbix zone
 # check subnets and masks if needs to be other than prod zabbix-server
-
-  - name: Include Properties File for Server FQDNs and User Info
-    include_vars:
-      file: properties.yml
 
   - name: Check if DEV Subnet
     set_fact: 

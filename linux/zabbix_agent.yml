@@ -1,11 +1,16 @@
 ---
+# the setup_monitoring role is the same as the one used in the ETS-prep playbook
+# except uses the set_properties.yml file to override the defaults instead of the 
+# datacenter variable files.
+
 - hosts: linux
   become: yes
 
-  # simplified playbook of ETS-prep only sets the variables needed for zabbix
-  # then runs the zabbix portion of the playbook
-
   pre_tasks:
+
+  - name: Include Properties File for Server FQDNs and User Info
+    include_vars:
+      file: properties.yml
 
   - name: Set Zabbix Default Values
     include_vars:
