@@ -20,7 +20,7 @@ Sample usage for kicking off the ansible agent playbook:
 
 ### Playbook Files & Setup
 
-This playbook is built using the same format at the setup_monitoring role from the ETS-prep playbook, without all the other roles and variable files. Instead variable files in the ETS-prep playbook it uses: 
+This playbook is built using the same format at the setup_monitoring role from the ETS-prep playbook, without all the other roles and variable files (eg. West defaults, datacenter and subnet files). Instead of the variable files in the ETS-prep playbook it uses: 
 
 - defaults.yml, to set the default Zabbix server and user
 - properties.yml, has all environments Zabbix servers and users
