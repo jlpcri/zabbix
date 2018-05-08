@@ -2,7 +2,13 @@
 # properties.yml contains the servers for each defined zabbix zone
 # check subnets and masks if needs to be other than prod zabbix-server
 
-  - name: Check if DEV Subnet
+  - name: Check if DEV Subnet EOD
+    set_fact:
+      west: "{{ west|combine({'zabbix': {'server': '{{ zabbix_dev }}'}}) }}"
+    when:
+      ansible_default_ipv4.network == "10.50.218.0" and ansible_default_ipv4.netmask == "255.255.254.0"
+
+  - name: Check if DEV Subnet Non EOD
     set_fact: 
       west: "{{ west|combine({'zabbix': {'server': '{{ zabbix_dev }}', 'owner': '{{ zabbix_default }}', 'group': '{{ zabbix_default }}'}}) }}" 
     when: 
