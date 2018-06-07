@@ -1,5 +1,5 @@
 ---
-  - name: Check if zabbix-server Port is Open
+  - name: Check if Port is Open to {{ west.zabbix.server }}
     wait_for:
       host: "{{ west.zabbix.server }}"
       port: 10051
@@ -44,7 +44,7 @@
       state: latest
       validate_certs: false
 
-  - name: Copy Zabbix Configs All Linux
+  - name: Copy Zabbix Configs
     template: 
       src: "{{ item.src }}"
       dest: "{{ item.dest }}"
@@ -101,7 +101,7 @@
       enabled: yes
       state: restarted
 
-  - name: Check zabbix-agent Port is Open
+  - name: Check zabbix-agent Port is Open Locally
     wait_for:
       port: 10050
       connect_timeout: 5
