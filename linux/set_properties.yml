@@ -6,7 +6,8 @@
     set_fact:
       west: "{{ west|combine({'zabbix': {'server': '{{ zabbix_dev }}'}}) }}"
     when:
-      ansible_default_ipv4.network == "10.50.218.0" and ansible_default_ipv4.netmask == "255.255.254.0"
+      ( ansible_default_ipv4.network == "10.50.217.0" and ansible_default_ipv4.netmask == "255.255.254.0" ) or
+      ( ansible_default_ipv4.network == "10.50.218.0" and ansible_default_ipv4.netmask == "255.255.254.0" )
 
   - name: Check if DEV Subnet Non EOD
     set_fact: 
@@ -15,11 +16,12 @@
       ( ansible_default_ipv4.network == "10.27.164.0" and ansible_default_ipv4.netmask == "255.255.252.0" ) or
       ( ansible_default_ipv4.network == "10.27.224.0" and ansible_default_ipv4.netmask == "255.255.254.0" )
 
-  - name: Check if Test Subnet
+  - name: Check if QA Subnet
     set_fact:
       west: "{{ west|combine({'zabbix': {'server': '{{ zabbix_test }}'}}) }}" 
     when: 
       ( ansible_default_ipv4.network == "10.18.132.0" and ansible_default_ipv4.netmask == "255.255.255.0" ) or
+      ( ansible_default_ipv4.network == "10.18.135.0" and ansible_default_ipv4.netmask == "255.255.255.0" ) or
       ( ansible_default_ipv4.network == "10.18.138.0" and ansible_default_ipv4.netmask == "255.255.255.0" ) or
       ( ansible_default_ipv4.network == "10.18.153.0" and ansible_default_ipv4.netmask == "255.255.255.0" ) or
       ( ansible_default_ipv4.network == "10.27.228.0" and ansible_default_ipv4.netmask == "255.255.254.0" )

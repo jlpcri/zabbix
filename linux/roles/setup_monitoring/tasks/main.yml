@@ -44,7 +44,7 @@
       state: latest
       validate_certs: false
 
-  - name: Copy Zabbix Configs
+  - name: Copy Zabbix Configs All Linux
     template: 
       src: "{{ item.src }}"
       dest: "{{ item.dest }}"
@@ -54,6 +54,19 @@
     with_items:
       - { src: 'etc/zabbix/zabbix_agentd.conf.j2', dest: '/etc/zabbix/zabbix_agentd.conf' }
       - { src: 'etc/logrotate.d/zabbix-agent.j2', dest: '/etc/logrotate.d/zabbix-agent' }
+
+  # opens permissions on /var/run/zabbix so both zabbix and eitzbxcp can write to it on reboot
+  # needed since systemd-tmpfiles only checks /etc/passwd and /etc/group for user infomation
+  - name: Copy Zabbix Configs RHEL 7
+    template:
+      src: usr/lib/tmpfiles.d/zabbix-agent.conf.j2
+      dest: /usr/lib/tmpfiles.d/zabbix-agent.conf
+      owner: root
+      group: root
+      mode: 0644
+    when:
+      - ansible_distribution == "RedHat"
+      - ansible_distribution_major_version == "7"
 
   - name: Set Permissions for Service Account
     file: 
